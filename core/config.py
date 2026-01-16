@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES :   int=30
     MONGO_URL   :   str
     DB_NAME     :   str
+    KEY_GEMINI_LLAMA    :   str
     
     class Config:
         """
