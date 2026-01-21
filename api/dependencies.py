@@ -5,9 +5,13 @@ from infrastructure.security.tokenService import TokenService
 from core.config import getSettings
 from infrastructure.persistence.mongodb.connection import MongoClientManager
 from infrastructure.persistence.mongodb.userRepository import MongoRepository
-## tesseract
+## tesseract ##
 from application.tesseractUseCase import ExtractTextTesseract
 from infrastructure.ocr.tesseractPdfExtractor import TesseractpdfExtractor
+##
+##  Excel ##
+from application.excelUseCase import DataExcelProcessing
+from infrastructure.excel.excelDataExcel import ExcelDataExcel
 ##
 ## JWT  ##
 from fastapi import HTTPException
@@ -44,3 +48,6 @@ async def getCurrentUser(
     
 async def getTesseractUseCase():
     return ExtractTextTesseract(TesseractpdfExtractor())
+
+async def getExcelUseCase(): 
+    return DataExcelProcessing(ExcelDataExcel())
