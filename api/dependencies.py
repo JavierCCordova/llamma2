@@ -10,14 +10,16 @@ from application.tesseractUseCase import ExtractTextTesseract
 from infrastructure.ocr.tesseractPdfExtractor import TesseractpdfExtractor
 ##
 ##  Excel ##
-from application.excelUseCase import DataExcelProcessing
-from infrastructure.excel.excelDataExcel import ExcelDataExcel
+from application.excelUseCase import DataExcelUseCase
+from infrastructure.excel.excelData import DataExcel
+from infrastructure.excel.excelParserDataInfra import PandasParser
+from infrastructure.persistence.mongodb.excelRepository import MongoExcelRepository
+from domain.dataExcel.services.excelProcessing  import ExcelValidationService
 ##
 ## JWT  ##
 from fastapi import HTTPException
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
-##
-
+## 
 jwtBearToken    =   HTTPBearer()
 
 async def getUserRepository():
@@ -50,4 +52,10 @@ async def getTesseractUseCase():
     return ExtractTextTesseract(TesseractpdfExtractor())
 
 async def getExcelUseCase(): 
-    return DataExcelProcessing(ExcelDataExcel())
+    
+    mongoClient     =   MongoClientManager.getCliente()    ##trae session
+    mongoRepository =   MongoExcelRepository(mongoClient)
+    validation      =   ExcelValidationService()
+    pandasParser    =   PandasParser()
+    return DataExcelUseCase(DataExcel(mongoRepository,pandasParser),
+                            validation)

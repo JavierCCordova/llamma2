@@ -2,9 +2,9 @@ from fastapi import APIRouter, UploadFile, Depends
 from domain.dataExcel.entities import ExcelFile
 from api.dependencies import getCurrentUser, getExcelUseCase
 
-routerdataMonth =   APIRouter(prefix="/data", tags=['DATA'])
+routerDataExcel =   APIRouter(prefix="/data", tags=['DATA'])
 
-@routerdataMonth.post("/excel")
+@routerDataExcel.post("/excel")
 async def importExcel(
     file        :   UploadFile,
     depJwt      :   str =   Depends(getCurrentUser),  #jwt    
@@ -13,4 +13,4 @@ async def importExcel(
     excelClass  =   ExcelFile(await file.read(), file.filename) 
     response    =   await usecase.loadExcelData(excelClass)
     print(response)
-    return  {'procesado': 'prueba', 'datos':depJwt}
+    return  {'procesado': 'prueba', 'datos':depJwt, "resultado": response}
