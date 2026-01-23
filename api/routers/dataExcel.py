@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, Depends
 from domain.dataExcel.entities import ExcelFile
-from api.dependencies import getCurrentUser, getExcelUseCase
+from api.dependencies import getCurrentUser, getExcelUseCase, getSummaryDepende
 
 routerDataExcel =   APIRouter(prefix="/data", tags=['DATA'])
 
@@ -19,7 +19,8 @@ async def importExcelPay(
 async def obtainExcelPay(
     idFile  :   str,
     depJwt  :   str = Depends(getCurrentUser),
-    
+    usecase =   Depends(getSummaryDepende)
 ):  
     print(idFile)
-    return {'Salida': 'Holamundo'}
+    response    =   await usecase.getSummaryUseCase(idFile)
+    return {'Salida': response}

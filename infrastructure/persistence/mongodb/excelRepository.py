@@ -1,4 +1,5 @@
 from core.config import settings
+from bson import ObjectId
 
 class MongoExcelRepository():
     
@@ -11,3 +12,10 @@ class MongoExcelRepository():
         collection      =   self.db['aviciiDataPay']
         payCollection   =   await collection.insert_one(info)
         return 'Guardado' if payCollection.inserted_id  else None
+    
+    async def getMongoPaySummary(self, idSummary: str)-> dict | None:
+        
+        collection      =   self.db['aviciiDataPay']
+        summaryRespon   =   await collection.find_one({'_id': ObjectId(idSummary)})
+        if summaryRespon:
+            return summaryRespon.get('emision',{})
