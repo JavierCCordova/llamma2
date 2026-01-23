@@ -13,9 +13,9 @@ class DataExcel(ExcelRepositoryPort):
         self.pandasParser           =   pandasParser
     
     async def loadDataExcel(self, excel: ExcelFile)-> dict:
-        responseParser  =   self.pandasParser.getDataExcel(excel.content)
+        responseParser  =   self.pandasParser.getReportPayExcel(excel.content)
         return responseParser
         
         
     async def saveDataExcel(self, data: dict) -> str | None:
-        return await self.mongoExcelRepository.setDataExcel(data)
+        return await self.mongoExcelRepository.setDataPayExcel(data)
