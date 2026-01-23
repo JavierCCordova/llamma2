@@ -6,3 +6,5 @@ class DomainError(Exception):
 class InvalidFormatError(DomainError):
     pass 
     
+class InvalidSizeInput(DomainError):
+    pass

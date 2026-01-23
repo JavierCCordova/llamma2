@@ -1,5 +1,5 @@
 from domain.dataExcel.entities import ExcelFile
-from domain.common.exceptions import InvalidFormatError
+from domain.common.exceptions import InvalidFormatError, InvalidSizeInput
 
 class ExcelValidationService:
     
@@ -12,3 +12,7 @@ class ExcelValidationService:
             "filename": excel.filename,
             "size": len(excel.content)
         }
+        
+    def validateSideCharSummaryExcel(self, idSummary: str)->bool:
+        if len(idSummary)< 10:
+            raise InvalidSizeInput("El tamaño del campos es mejore de lo esperado")        

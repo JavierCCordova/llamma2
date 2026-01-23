@@ -10,8 +10,9 @@ from application.tesseractUseCase import ExtractTextTesseract
 from infrastructure.ocr.tesseractPdfExtractor import TesseractpdfExtractor
 ##
 ##  Excel ##
-from application.excelUseCase import DataExcelUseCase
+from application.excelUseCase import DataExcelUseCase, GetSummaryUseCase
 from infrastructure.excel.excelData import DataExcel
+from infrastructure.excel.excelGetInfra import ExcelGetInfra
 from infrastructure.excel.excelParserDataInfra import PandasParser
 from infrastructure.persistence.mongodb.excelRepository import MongoExcelRepository
 from domain.dataExcel.services.excelProcessing  import ExcelValidationService
@@ -59,3 +60,11 @@ async def getExcelUseCase():
     pandasParser    =   PandasParser()
     return DataExcelUseCase(DataExcel(mongoRepository,pandasParser),
                             validation)
+    
+async def getSummaryDepende():
+    
+    mongoclient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoExcelRepository(mongoclient)
+    validation      =   ExcelValidationService()
+    return GetSummaryUseCase( ExcelGetInfra(MongoRepository), validation)
+    
