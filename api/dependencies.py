@@ -21,6 +21,11 @@ from domain.dataExcel.services.excelProcessing  import ExcelValidationService
 from fastapi import HTTPException
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 ## 
+## CRM
+from application.cmrClientUseCase import CmrclienteUseCase
+from infrastructure.crm.crmProcessingInfra import ProcessingInfra
+from infrastructure.persistence.mongodb.cmrRepository import MongoCmrRepository
+##
 jwtBearToken    =   HTTPBearer()
 
 async def getUserRepository():
@@ -51,6 +56,11 @@ async def getCurrentUser(
     
 async def getTesseractUseCase():
     return ExtractTextTesseract(TesseractpdfExtractor())
+
+async def getCmrCliente():
+    mongoClient     =   MongoClientManager.getCliente()    ##trae session
+    mongoRepository =   MongoCmrRepository(mongoClient)
+    return CmrclienteUseCase(ProcessingInfra(mongoRepository))
 
 async def getExcelUseCase(): 
     
