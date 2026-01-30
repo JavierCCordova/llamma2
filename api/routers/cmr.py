@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, Depends
 from fastapi.responses import JSONResponse
-from api.dependencies import getCurrentUser, getCmrCliente
+from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord
+from domain.crm.entities.clientId import ClientId
 
 routerCmr   =   APIRouter(prefix= "/crm", tags= ['CRM'])
 
@@ -11,9 +12,24 @@ async def getClientCMR(
 ):  
     text    =   await usecase.getCmrClient()
     salida  =   {
-        "client": text,
         "status_code": 200,
-        "message": "Datos recuperados con éxito"
+        "message": "Datos recuperados con éxito",
+        "client": text
     }
     return JSONResponse(content=salida, status_code=salida['status_code'])
     
+@routerCmr.get("/getRecord")
+async def getRecordCMR(
+    idRecord:   int,
+    name    =   Depends(getCurrentUser),
+    usecase =   Depends(getCrmRecord),
+):
+    idRecordClient  =   ClientId(idRecord) 
+    jsonRecord  =   await usecase.getCrmRecord(idRecordClient)
+    salida  =   {
+            "status_code": 200,
+            "message": "Datos recuperados con éxito",
+            "Data": jsonRecord
+    }
+    
+    return JSONResponse(content=salida, status_code=salida['status_code'])

@@ -1,4 +1,5 @@
 from domain.crm.ports.client import CmrClientPort 
+from domain.crm.entities.clientId import ClientId
 
 class CmrclienteUseCase:
     
@@ -9,3 +10,6 @@ class CmrclienteUseCase:
         
     async def getCmrClient(self):
         return await self.cmrClientPort.getCmrClient()
+    
+    async def getCrmRecord(self, client: ClientId): 
+        return await self.cmrClientPort.getCrmRecord(client)
