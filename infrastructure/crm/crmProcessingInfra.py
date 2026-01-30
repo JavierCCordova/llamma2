@@ -9,3 +9,6 @@ class ProcessingInfra(CmrClientPort):
     
     async def getCmrClient(self): 
         return await self.mongoCmrRepository.getCmrClient()
+    
+    async def getCrmRecord(self, client: int): 
+        return await self.mongoCmrRepository.getCmrRecord(client)

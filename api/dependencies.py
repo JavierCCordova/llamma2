@@ -62,6 +62,11 @@ async def getCmrCliente():
     mongoRepository =   MongoCmrRepository(mongoClient)
     return CmrclienteUseCase(ProcessingInfra(mongoRepository))
 
+async def getCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRepository(mongoClient)
+    return CmrclienteUseCase(ProcessingInfra(MongoRepository))
+
 async def getExcelUseCase(): 
     
     mongoClient     =   MongoClientManager.getCliente()    ##trae session
