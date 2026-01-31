@@ -21,10 +21,14 @@ from domain.dataExcel.services.excelProcessing  import ExcelValidationService
 from fastapi import HTTPException
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 ## 
-## CRM
-from application.cmrClientUseCase import CmrclienteUseCase
-from infrastructure.crm.crmProcessingInfra import ProcessingInfra
-from infrastructure.persistence.mongodb.cmrRepository import MongoCmrRepository
+## CRM Record
+from application.record.cmrCallsUseCase import CmrHistorytUseCase
+from infrastructure.crm.crmRecordInfra import RecordInfra
+from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
+## CRM Client
+from application.client.cmrClientUseCase import CmrclienteUseCase 
+from infrastructure.persistence.mongodb.cmrClientRepository import MongoCmrClientRepository
+from infrastructure.crm.crmClientInfra import ClientInfra
 ##
 jwtBearToken    =   HTTPBearer()
 
@@ -59,13 +63,14 @@ async def getTesseractUseCase():
 
 async def getCmrCliente():
     mongoClient     =   MongoClientManager.getCliente()    ##trae session
-    mongoRepository =   MongoCmrRepository(mongoClient)
-    return CmrclienteUseCase(ProcessingInfra(mongoRepository))
+    mongoRepository =   MongoCmrClientRepository(mongoClient)
+    return CmrclienteUseCase(ClientInfra(mongoRepository))
+     
 
-async def getCrmRecord():
+async def getCrmRecord(): 
     mongoClient     =   MongoClientManager.getCliente()
-    MongoRepository =   MongoCmrRepository(mongoClient)
-    return CmrclienteUseCase(ProcessingInfra(MongoRepository))
+    MongoRepository =   MongoCmrRecordRepository(mongoClient) 
+    return CmrHistorytUseCase(RecordInfra(MongoRepository))
 
 async def getExcelUseCase(): 
     

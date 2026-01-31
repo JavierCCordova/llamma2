@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from api.routes import router
 from api.routers.ocr    import routerTesseract
 from api.routers.dataExcel import routerDataExcel
-from api.routers.cmr import routerCmr
+from api.routers.crm import routerCmr
 ## Exception
 from api.exceptionHandlers import domainErrorHandler
 from domain.common.exceptions import DomainError
