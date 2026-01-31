@@ -22,13 +22,14 @@ from fastapi import HTTPException
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 ## 
 ## CRM Record
-from application.record.cmrCallsUseCase import CmrHistorytUseCase
+from application.record.cmrCallsUseCase import CmrHistorytUseCase   #history
+from application.record.cmrUpdateUseCase import CmrInsertUseCase
 from infrastructure.crm.crmRecordInfra import RecordInfra
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
 ## CRM Client
 from application.client.cmrClientUseCase import CmrclienteUseCase 
 from infrastructure.persistence.mongodb.cmrClientRepository import MongoCmrClientRepository
-from infrastructure.crm.crmClientInfra import ClientInfra
+from infrastructure.crm.crmClientInfra import ClientInfra 
 ##
 jwtBearToken    =   HTTPBearer()
 
@@ -55,25 +56,12 @@ async def getCurrentUser(
     userId         =   tokenService.verifyToken(token)
     if not userId:
         raise HTTPException(status_code=401, detail="Invalid Token")
-    
     return userId
     
 async def getTesseractUseCase():
     return ExtractTextTesseract(TesseractpdfExtractor())
 
-async def getCmrCliente():
-    mongoClient     =   MongoClientManager.getCliente()    ##trae session
-    mongoRepository =   MongoCmrClientRepository(mongoClient)
-    return CmrclienteUseCase(ClientInfra(mongoRepository))
-     
-
-async def getCrmRecord(): 
-    mongoClient     =   MongoClientManager.getCliente()
-    MongoRepository =   MongoCmrRecordRepository(mongoClient) 
-    return CmrHistorytUseCase(RecordInfra(MongoRepository))
-
 async def getExcelUseCase(): 
-    
     mongoClient     =   MongoClientManager.getCliente()    ##trae session
     mongoRepository =   MongoExcelRepository(mongoClient)
     validation      =   ExcelValidationService()
@@ -82,9 +70,22 @@ async def getExcelUseCase():
                             validation)
     
 async def getSummaryDepende():
-    
     mongoclient     =   MongoClientManager.getCliente()
     MongoRepository =   MongoExcelRepository(mongoclient)
     validation      =   ExcelValidationService()
     return GetSummaryUseCase( ExcelGetInfra(MongoRepository), validation)
-    
+
+async def getCmrCliente():
+    mongoClient     =   MongoClientManager.getCliente()    ##trae session
+    mongoRepository =   MongoCmrClientRepository(mongoClient)
+    return CmrclienteUseCase(ClientInfra(mongoRepository))
+     
+async def getCrmRecord(): 
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient) 
+    return CmrHistorytUseCase(RecordInfra(MongoRepository))
+  
+async def insertCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)    
+    return CmrInsertUseCase(RecordInfra(MongoRepository))

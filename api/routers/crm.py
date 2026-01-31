@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, Depends
 from fastapi.responses import JSONResponse
-from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord
+from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord, insertCrmRecord
 from domain.crm.entities.clientId import ClientId
 from domain.crm.entities.clientRecord import ClientRecord
 
@@ -37,12 +37,14 @@ async def getRecordCMR(
 
 @routerCmr.put("/UpdateRecord")
 async def updateRecord( 
-    idRecord:   ClientRecord,
+    callRecord:   ClientRecord,
     name    =   Depends(getCurrentUser), 
+    usecase =   Depends(insertCrmRecord)
 ):
-    
+    response    =  await usecase.insertCrmRecord(callRecord)
     salida= {
         "status_code": 200,
-            "message": "Datos recuperados con éxito"
+        "message": "Datos recuperados con éxito",
+        "accion": response
     }
     return JSONResponse(status_code= salida['status_code'], content= salida)

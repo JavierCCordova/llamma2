@@ -7,5 +7,5 @@ class CrmRecordPort(Protocol):
     async def getCrmRecord(self, client: ClientId)-> dict | None:
         ...
         
-    async def insertCrmRecord(self, record) -> dict | None:
+    async def insertCrmRecord(self, record:ClientRecord) -> dict | None:
         ...

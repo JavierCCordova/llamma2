@@ -27,7 +27,19 @@ class MongoCmrRecordRepository():
         return response
     
     async def insertCrmRecord(self, record : ClientRecord) -> dict:
-        
-        collection  =   self.db['aviciiCmrRecord']  
-        
-        return {'holamundo'} 
+        try:
+            collection  =   self.db['aviciiCmrRecord']  
+            collecInse  =   await collection.insert_one(record.model_dump())
+            
+            response    = {
+                "status" : 'success'  if collecInse.acknowledged  else 'error',
+                "id": str(collecInse.inserted_id)
+            }
+            return response
+        except Exception as e:
+            print(e)
+            response    =   {
+                "status" : "error",
+                "message": "Error de BBDD"
+            }
+            return response

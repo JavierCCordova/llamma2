@@ -1,11 +1,11 @@
-from datetime import date
+from datetime import datetime
 from pydantic import BaseModel
 
 class ClientRecord(BaseModel):
     
     idClient    :   int
-    dateRecord  :   date
-    dateAgent   :   date
+    dateRecord  :   datetime
+    dateAgent   :   datetime
     description :   str
     typeAccion  :   str
     responseAction  :   str
