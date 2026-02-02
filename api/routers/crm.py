@@ -35,7 +35,7 @@ async def getRecordCMR(
     
     return JSONResponse(content=salida, status_code=salida['status_code'])
 
-@routerCmr.put("/UpdateRecord")
+@routerCmr.put("/SaveRecord")
 async def updateRecord( 
     callRecord:   ClientRecord,
     name    =   Depends(getCurrentUser), 
