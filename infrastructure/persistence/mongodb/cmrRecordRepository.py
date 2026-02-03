@@ -1,6 +1,7 @@
 from core.config import settings
 from domain.crm.entities.clientRecord import ClientRecord
 from domain.crm.entities.clientId import ClientId
+from datetime import datetime
 
 class MongoCmrRecordRepository():
     
@@ -8,22 +9,29 @@ class MongoCmrRecordRepository():
         self.session    =   session
         self.db         =   self.session[ settings.DB_NAME ]
         
-    async def getCmrRecord(self, client: ClientId)->dict:
-        print("getCmrRecord Repository", client.idClient)
+    async def getCmrRecord(self, client: ClientId)->dict: 
         collection  =   self.db['aviciiCmrRecord']  
         clientColl  =   collection.find({'idClient': client.idClient})
         recordsCall =   await clientColl.to_list(length=None)
-        response    =   [
-            {
-                "dateRecord"    : r.get('dateRecord', ''),
-                "dateAgent"     : r.get('dateAgent', ''),
+        response = []
+        for r in recordsCall: 
+            
+            date_rec = r.get('dateRecord', '')
+            date_age = r.get('dateAgent', '')
+ 
+            if isinstance(date_rec, datetime):
+                date_rec = date_rec.isoformat()
+            if isinstance(date_age, datetime):
+                date_age = date_age.isoformat()
+
+            response.append({
+                "id"            : str(r.get('_id')),
+                "dateRecord"    : date_rec,
+                "dateAgent"     : date_age,
                 "description"   : r.get('description', ''),
                 "typeAccion"    : r.get('typeAccion', ''),
                 "responseAction": r.get('responseAction', '')
-            }
-            for r in recordsCall
-        ]
-        
+            })
         return response
     
     async def insertCrmRecord(self, record : ClientRecord) -> dict:
