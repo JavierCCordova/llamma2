@@ -2,6 +2,7 @@ from core.config import settings
 from domain.crm.entities.clientRecord import ClientRecord
 from domain.crm.entities.clientId import ClientId
 from datetime import datetime
+from bson import ObjectId
 
 class MongoCmrRecordRepository():
     
@@ -51,3 +52,14 @@ class MongoCmrRecordRepository():
                 "message": "Error de BBDD"
             }
             return response
+    
+    async def deleteCrmRecord(self,id: str) -> dict:
+        Idbyson     =   ObjectId(id)
+        collection  =   self.db['aviciiCmrRecord']
+        delAcc      =   await collection.delete_one({'_id':Idbyson})
+        
+        response    =   {
+            "status" :  "sucess" if delAcc.deleted_count > 0 else "No registros" 
+        }
+        
+        return response

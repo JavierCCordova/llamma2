@@ -11,3 +11,7 @@ class RecordInfra(CrmRecordPort):
     
     async def getCrmRecord(self, client): 
         return await self.mongoCmrRecordRepository.getCmrRecord(client)
+    
+    
+    async def deleteCrmRecord(self, id):
+        return await self.mongoCmrRecordRepository.deleteCrmRecord(id)
