@@ -8,3 +8,6 @@ class CmrInsertUseCase:
         
     async def insertCrmRecord(self, clientRecord: ClientRecord):
         return await self.crmRecordPort.insertCrmRecord(clientRecord)
+    
+    async def updateCrmRecord(self, clientRecord: ClientRecord, id: str):
+        return await self.crmRecordPort.updateCrmRecord(clientRecord, id)

@@ -95,3 +95,8 @@ async def deleteCrmRecord():
     mongoClient     =   MongoClientManager.getCliente()
     MongoRepository =   MongoCmrRecordRepository(mongoClient)
     return CmrDeleteUseCase(RecordInfra(MongoRepository))
+
+async def updateCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrInsertUseCase(RecordInfra(MongoRepository))

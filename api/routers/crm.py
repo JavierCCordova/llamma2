@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, Depends
 from fastapi.responses import JSONResponse
-from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord, insertCrmRecord, deleteCrmRecord
+from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord, insertCrmRecord, deleteCrmRecord,updateCrmRecord
 from domain.crm.entities.clientId import ClientId
 from domain.crm.entities.clientRecord import ClientRecord
 
@@ -58,3 +58,21 @@ async def deleteRecord(
     ):
     response    =   await usecase.deleteCrmRecord(id)
     return JSONResponse(status_code=200,content= response)
+
+
+@routerCmr.patch("/UpdateRecord")
+async def updateRecord(
+    callRecord: ClientRecord,
+    id : str,
+    name    =   Depends(getCurrentUser),
+    usecae  =   Depends(updateCrmRecord)
+):
+    statusCode  =   0
+    response    =  await usecae.updateCrmRecord(callRecord, id)
+    if response:    
+        statusCode  =   200
+    else:
+        statusCode  =   500
+    return JSONResponse(status_code=statusCode, content={'estado':response})
+    
+    

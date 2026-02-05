@@ -2,7 +2,7 @@ from core.config import settings
 from domain.crm.entities.clientRecord import ClientRecord
 from domain.crm.entities.clientId import ClientId
 from datetime import datetime
-from bson import ObjectId
+from bson import ObjectId 
 
 class MongoCmrRecordRepository():
     
@@ -63,3 +63,18 @@ class MongoCmrRecordRepository():
         }
         
         return response
+    
+    def toMongoDict(self, record: ClientRecord):
+        return record.model_dump()
+    
+    async def updateCrmRecord(self, record: ClientRecord, id: str)->bool:
+        try:
+            collection  =   self.db['aviciiCmrRecord']
+            dataMongo   =   self.toMongoDict(record) 
+            result      =   await collection.update_one(
+                { "_id": ObjectId(id) },
+                 {"$set": dataMongo }
+            )
+            return result.modified_count > 0 
+        except Exception as e: 
+            return False

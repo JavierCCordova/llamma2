@@ -12,3 +12,6 @@ class CrmRecordPort(Protocol):
         
     async def deleteCrmRecord(self, id :str) -> dict | None:
         ...
+        
+    async def updateCrmRecord(self, record: ClientRecord, id :str)-> bool | None:
+        ...
