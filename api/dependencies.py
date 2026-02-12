@@ -26,6 +26,9 @@ from application.record.cmrCallsUseCase import CmrHistorytUseCase   #history
 from application.record.cmrUpdateUseCase import CmrInsertUseCase
 from application.record.cmrDeleteUseCase import CmrDeleteUseCase
 from infrastructure.crm.crmRecordInfra import RecordInfra
+from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
+
+from application.record.cmrCalendarUseCase import CmrCalendarUseCase
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
 ## CRM Client
 from application.client.cmrClientUseCase import CmrclienteUseCase 
@@ -100,3 +103,8 @@ async def updateCrmRecord():
     mongoClient     =   MongoClientManager.getCliente()
     MongoRepository =   MongoCmrRecordRepository(mongoClient)
     return CmrInsertUseCase(RecordInfra(MongoRepository))
+
+async def getCalendar():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))

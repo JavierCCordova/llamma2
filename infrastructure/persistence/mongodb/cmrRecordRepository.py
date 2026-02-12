@@ -78,3 +78,25 @@ class MongoCmrRecordRepository():
             return result.modified_count > 0 
         except Exception as e: 
             return False
+        
+    async def getCalendar(self)-> list:
+        try:
+            response    =   []
+            collection  =   self.db['aviciiCmrCalender']
+            dataCal     =   collection.find()
+            calendar    =   await dataCal.to_list(length=None)
+            if calendar:
+                for x in calendar:
+                    rawDate =   x.get('date')
+                    if rawDate:
+                        formatDate = rawDate.strftime("%Y-%m-%d")
+                    
+                    respo   =   {
+                         "date":        formatDate, 
+                         "descripcion": x.get('descripcion',''), 
+                         "cliente":     x.get('cliente','')
+                    }
+                    response.append(respo)
+            return response
+        except Exception as e:
+            return False

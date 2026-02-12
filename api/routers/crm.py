@@ -1,6 +1,9 @@
 from fastapi import APIRouter, UploadFile, Depends
 from fastapi.responses import JSONResponse
-from api.dependencies import getCurrentUser, getCmrCliente, getCrmRecord, insertCrmRecord, deleteCrmRecord,updateCrmRecord
+from api.dependencies import (getCurrentUser, getCmrCliente, 
+                              getCrmRecord, insertCrmRecord,
+                              deleteCrmRecord,updateCrmRecord,
+                              getCalendar)
 from domain.crm.entities.clientId import ClientId
 from domain.crm.entities.clientRecord import ClientRecord
 
@@ -76,3 +79,13 @@ async def updateRecord(
     return JSONResponse(status_code=statusCode, content={'estado':response})
     
     
+@routerCmr.get("/getCalendar")
+async def getCalendar(
+    name    =   Depends(getCurrentUser),
+    usecase =   Depends(getCalendar)
+): 
+    response            =   {}
+    response['status']  =   200
+    response['data']    =   await usecase.getCalendar()    
+    
+    return JSONResponse(status_code=response['status'] , content= response )
