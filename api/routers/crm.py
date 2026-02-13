@@ -3,9 +3,10 @@ from fastapi.responses import JSONResponse
 from api.dependencies import (getCurrentUser, getCmrCliente, 
                               getCrmRecord, insertCrmRecord,
                               deleteCrmRecord,updateCrmRecord,
-                              getCalendar)
+                              getCalendar, setCalendar)
 from domain.crm.entities.clientId import ClientId
 from domain.crm.entities.clientRecord import ClientRecord
+from domain.crm.entities.clientCalendar import ClientCalendar
 
 routerCmr   =   APIRouter(prefix= "/crm", tags= ['CRM'])
 
@@ -89,3 +90,13 @@ async def getCalendar(
     response['data']    =   await usecase.getCalendar()    
     
     return JSONResponse(status_code=response['status'] , content= response )
+
+
+@routerCmr.put("/setCalendar")
+async def setCalendar(
+    calendar    :   ClientCalendar,
+    name        =   Depends(getCurrentUser),
+    usecase     =   Depends(setCalendar)
+):
+    response    =   await usecase.setCalendar(calendar)  
+    return JSONResponse(status_code=response['status'], content= response)

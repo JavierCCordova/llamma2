@@ -1,6 +1,7 @@
 from core.config import settings
 from domain.crm.entities.clientRecord import ClientRecord
 from domain.crm.entities.clientId import ClientId
+from domain.crm.entities.clientCalendar import ClientCalendar
 from datetime import datetime
 from bson import ObjectId 
 
@@ -100,3 +101,15 @@ class MongoCmrRecordRepository():
             return response
         except Exception as e:
             return False
+    
+    async def setCalendar(self,calendar: ClientCalendar) -> dict:
+        
+        collection  =   self.db['aviciiCmrCalender']
+        calendar    =   calendar.model_dump()
+        result      =   await collection.insert_one(calendar)
+        nuevoId     =   str(result.inserted_id)
+         
+        return {
+            "status" :  200 if nuevoId else 500,
+            "message":  "success" if nuevoId else "Error",
+        }

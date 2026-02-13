@@ -8,3 +8,6 @@ class CmrCalendarUseCase:
         
     async def getCalendar(self):
         return await self.cmrCalendarPort.getCalendar()
+    
+    async def setCalendar(self, calendar: ClientCalendar):
+        return await self.cmrCalendarPort.setCalendar(calendar)    
