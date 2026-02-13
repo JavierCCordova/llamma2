@@ -5,3 +5,6 @@ class CmrCalendarPort(Protocol):
     
     async def getCalendar(self)->list | None:
         ...
+        
+    async def setCalendar(self, calendar) ->dict | None:
+        ...

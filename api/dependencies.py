@@ -108,3 +108,8 @@ async def getCalendar():
     mongoClient     =   MongoClientManager.getCliente()
     MongoRepository =   MongoCmrRecordRepository(mongoClient)
     return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))
+
+async def setCalendar():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))

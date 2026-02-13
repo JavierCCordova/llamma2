@@ -1,5 +1,7 @@
+from pydantic import BaseModel
+from datetime import datetime
 
-class ClientCalendar():
-    client:   str
-    ruc:      str
-    telefono: str
+class ClientCalendar(BaseModel):
+    date:           datetime
+    descripcion:    str
+    cliente:        str
