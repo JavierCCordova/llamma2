@@ -27,8 +27,11 @@ from application.record.cmrUpdateUseCase import CmrInsertUseCase
 from application.record.cmrDeleteUseCase import CmrDeleteUseCase
 from infrastructure.crm.crmRecordInfra import RecordInfra
 from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
+from infrastructure.webRobot.robotDni import RobotDniInfra
 
 from application.record.cmrCalendarUseCase import CmrCalendarUseCase
+from application.robots.dniPlaywrightUseCase import DniUseCase
+
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
 ## CRM Client
 from application.client.cmrClientUseCase import CmrclienteUseCase 
@@ -113,3 +116,7 @@ async def setCalendar():
     mongoClient     =   MongoClientManager.getCliente()
     MongoRepository =   MongoCmrRecordRepository(mongoClient)
     return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))
+
+async def getDni():
+    url = "https://eldni.com/pe/buscar-datos-por-dni"
+    return DniUseCase(RobotDniInfra(url))
