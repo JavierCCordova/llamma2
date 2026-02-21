@@ -5,8 +5,16 @@ class GeminiConnexion:
     
     _client = None
     
-    def getClient(self):        
-        if self._client is None:
-            self._client    =   genai.client(api_key = settings.KEY_GEMINI_LLAMA)
-        return self._client
-        
+    def __init__(self, modelName: str = 'gemini-2.5-flash'):
+        genai.configure(api_key = settings.KEY_GEMINI_LLAMA)
+        self._model =   genai.GenerativeModel(modelName)
+    
+    async def generateResponse(self, prompt):        
+        try:
+            response    =   await self._model.generate_content_async(prompt)
+            if not response.text:
+                return 'No tenemos respuesta de la IA'
+            
+            return  response.text
+        except:
+            return 'Problemas con la solución'

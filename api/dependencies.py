@@ -28,11 +28,14 @@ from application.record.cmrDeleteUseCase import CmrDeleteUseCase
 from infrastructure.crm.crmRecordInfra import RecordInfra
 from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
 from infrastructure.webRobot.robotDni import RobotDniInfra
+from infrastructure.persistence.ai.gemini.repositoryElement import GeminiRepositoryElement
 
 from application.record.cmrCalendarUseCase import CmrCalendarUseCase
 from application.robots.dniPlaywrightUseCase import DniUseCase
+from application.robots.geminiUSeCase import GeminiUseCase
 
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
+
 ## CRM Client
 from application.client.cmrClientUseCase import CmrclienteUseCase 
 from infrastructure.persistence.mongodb.cmrClientRepository import MongoCmrClientRepository
@@ -120,3 +123,8 @@ async def setCalendar():
 async def getDni():
     url = "https://eldni.com/pe/buscar-datos-por-dni"
     return DniUseCase(RobotDniInfra(url))
+
+async def getIaResponse():
+    adapter =   GeminiRepositoryElement()
+    return GeminiUseCase(adapter)
+    
