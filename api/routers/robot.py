@@ -1,6 +1,7 @@
-from fastapi import APIRouter, UploadFile, Depends
+from fastapi import APIRouter, UploadFile, File, Form, Depends
 from fastapi.responses  import JSONResponse
 from api.dependencies import getCurrentUser, getDni, getIaResponse
+import json
 
 routerRobot = APIRouter(prefix='/Robot', tags=['ROBOT'])
 
@@ -25,4 +26,18 @@ async def getResponseIa(
     response            =   {}
     response['status']  =   200
     response['data']    =   await useCase.generate(question)
+    return JSONResponse(status_code=200, content=response)
+
+
+@routerRobot.post("/robot/ocrGemini")
+async def getResponseIa(
+    feature :   list[str] = Form(...),
+    file    :   UploadFile | None = File(None),
+    name    =   Depends(getCurrentUser),
+    useCase =   Depends(getIaResponse)
+):
+    fileBytes           =   await file.read()
+    response            =   {}
+    response['status']  =   200  
+    response['data']    =   await useCase.getDataFile(fileBytes, *feature)
     return JSONResponse(status_code=200, content=response)
