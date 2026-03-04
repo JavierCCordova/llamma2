@@ -29,10 +29,12 @@ from infrastructure.crm.crmRecordInfra import RecordInfra
 from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
 from infrastructure.webRobot.robotDni import RobotDniInfra
 from infrastructure.persistence.ai.gemini.repositoryElement import GeminiRepositoryElement
+from infrastructure.persistence.mongodb.geminiRepository import GeminiRepository
 
 from application.record.cmrCalendarUseCase import CmrCalendarUseCase
 from application.robots.dniPlaywrightUseCase import DniUseCase
 from application.robots.geminiUSeCase import GeminiUseCase
+from infrastructure.persistence.ai.gemini.connection import GeminiConnexion
 
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
 
@@ -125,6 +127,8 @@ async def getDni():
     return DniUseCase(RobotDniInfra(url))
 
 async def getIaResponse():
-    adapter =   GeminiRepositoryElement()
-    return GeminiUseCase(adapter)
+    mongoClient =   MongoClientManager.getCliente()
+    gemini      =   GeminiConnexion()
+    geminiRepo  =   GeminiRepository(mongoClient) 
+    return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
     

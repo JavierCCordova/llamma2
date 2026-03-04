@@ -80,6 +80,13 @@ MongoDb community
 
 Creación 
 
+## Dependencias workeds
+- Redis
+- sudo apt install redis-server
+- sudo systemctl enable redis
+- sudo systemctl start redis
+ -- redi puerto 6379 consutlas de fuera 0.0.0.0
+
 
 # variables de entorno
 
