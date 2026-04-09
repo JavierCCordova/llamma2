@@ -132,3 +132,11 @@ async def getIaResponse():
     geminiRepo  =   GeminiRepository(mongoClient) 
     return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
     
+async def getIaResponseMercado():
+    mongoClient =   MongoClientManager.getCliente()
+    gemini      =   GeminiConnexion('gemini-3.1-flash-lite-preview')
+    geminiRepo  =   GeminiRepository(mongoClient) 
+    return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
+    
+    
+    
