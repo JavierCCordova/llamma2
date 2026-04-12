@@ -5,15 +5,47 @@ from infrastructure.security.tokenService import TokenService
 from core.config import getSettings
 from infrastructure.persistence.mongodb.connection import MongoClientManager
 from infrastructure.persistence.mongodb.userRepository import MongoRepository
-## tesseract
+## tesseract ##
 from application.tesseractUseCase import ExtractTextTesseract
 from infrastructure.ocr.tesseractPdfExtractor import TesseractpdfExtractor
+##
+##  Excel ##
+from application.excelUseCase import DataExcelUseCase, GetSummaryUseCase
+from infrastructure.excel.excelData import DataExcel
+from infrastructure.excel.excelGetInfra import ExcelGetInfra
+from infrastructure.excel.excelParserDataInfra import PandasParser
+from infrastructure.persistence.mongodb.excelRepository import MongoExcelRepository
+from domain.dataExcel.services.excelProcessing  import ExcelValidationService
 ##
 ## JWT  ##
 from fastapi import HTTPException
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
-##
+## 
+## CRM Record
+from application.record.cmrCallsUseCase import CmrHistorytUseCase   #history
+from application.record.cmrUpdateUseCase import CmrInsertUseCase
+from application.record.cmrDeleteUseCase import CmrDeleteUseCase
+from infrastructure.crm.crmRecordInfra import RecordInfra
+from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
+from infrastructure.crm.crmMarketInfra import MarketInfra
+from infrastructure.webRobot.robotDni import RobotDniInfra
+from infrastructure.persistence.ai.gemini.repositoryElement import GeminiRepositoryElement
+from infrastructure.persistence.mongodb.geminiRepository import GeminiRepository
+from infrastructure.persistence.mongodb.cmrMarketRepository import MongoCrmMarketRepository
 
+from application.record.cmrCalendarUseCase import CmrCalendarUseCase
+from application.robots.dniPlaywrightUseCase import DniUseCase
+from application.robots.geminiUSeCase import GeminiUseCase
+from application.market.marketUserCase import MarketUseCase
+from infrastructure.persistence.ai.gemini.connection import GeminiConnexion
+
+from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
+
+## CRM Client
+from application.client.cmrClientUseCase import CmrclienteUseCase 
+from infrastructure.persistence.mongodb.cmrClientRepository import MongoCmrClientRepository
+from infrastructure.crm.crmClientInfra import ClientInfra 
+##
 jwtBearToken    =   HTTPBearer()
 
 async def getUserRepository():
@@ -39,8 +71,78 @@ async def getCurrentUser(
     userId         =   tokenService.verifyToken(token)
     if not userId:
         raise HTTPException(status_code=401, detail="Invalid Token")
-    
     return userId
     
 async def getTesseractUseCase():
     return ExtractTextTesseract(TesseractpdfExtractor())
+
+async def getExcelUseCase(): 
+    mongoClient     =   MongoClientManager.getCliente()    ##trae session
+    mongoRepository =   MongoExcelRepository(mongoClient)
+    validation      =   ExcelValidationService()
+    pandasParser    =   PandasParser()
+    return DataExcelUseCase(DataExcel(mongoRepository,pandasParser),
+                            validation)
+    
+async def getSummaryDepende():
+    mongoclient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoExcelRepository(mongoclient)
+    validation      =   ExcelValidationService()
+    return GetSummaryUseCase( ExcelGetInfra(MongoRepository), validation)
+
+async def getCmrCliente():
+    mongoClient     =   MongoClientManager.getCliente()    ##trae session
+    mongoRepository =   MongoCmrClientRepository(mongoClient)
+    return CmrclienteUseCase(ClientInfra(mongoRepository))
+     
+async def getCrmRecord(): 
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient) 
+    return CmrHistorytUseCase(RecordInfra(MongoRepository))
+  
+async def insertCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)    
+    return CmrInsertUseCase(RecordInfra(MongoRepository))
+
+async def deleteCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrDeleteUseCase(RecordInfra(MongoRepository))
+
+async def updateCrmRecord():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrInsertUseCase(RecordInfra(MongoRepository))
+
+async def getCalendar():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))
+
+async def setCalendar():
+    mongoClient     =   MongoClientManager.getCliente()
+    MongoRepository =   MongoCmrRecordRepository(mongoClient)
+    return CmrCalendarUseCase(CmrCalendarInfra(MongoRepository))
+
+async def getDni():
+    url = "https://eldni.com/pe/buscar-datos-por-dni"
+    return DniUseCase(RobotDniInfra(url))
+
+async def getIaResponse():
+    mongoClient =   MongoClientManager.getCliente()
+    gemini      =   GeminiConnexion()
+    geminiRepo  =   GeminiRepository(mongoClient) 
+    return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
+    
+async def getIaResponseMercado():
+    mongoClient =   MongoClientManager.getCliente()
+    gemini      =   GeminiConnexion('gemini-3.1-flash-lite-preview')
+    geminiRepo  =   GeminiRepository(mongoClient) 
+    return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
+    
+async def setMarketSave():
+    mongoClient         =   MongoClientManager.getCliente()
+    MongoGeminiRepo     =   MongoCrmMarketRepository(mongoClient)
+    return MarketUseCase(MarketInfra(MongoGeminiRepo))
+    

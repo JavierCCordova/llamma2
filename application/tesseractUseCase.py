@@ -6,4 +6,3 @@ class ExtractTextTesseract:
         
     async def execute(self, pdf):
         return await self.extractor.extractText(pdf)
-        
