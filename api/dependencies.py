@@ -27,13 +27,16 @@ from application.record.cmrUpdateUseCase import CmrInsertUseCase
 from application.record.cmrDeleteUseCase import CmrDeleteUseCase
 from infrastructure.crm.crmRecordInfra import RecordInfra
 from infrastructure.crm.crmCalendarInfra import CmrCalendarInfra
+from infrastructure.crm.crmMarketInfra import MarketInfra
 from infrastructure.webRobot.robotDni import RobotDniInfra
 from infrastructure.persistence.ai.gemini.repositoryElement import GeminiRepositoryElement
 from infrastructure.persistence.mongodb.geminiRepository import GeminiRepository
+from infrastructure.persistence.mongodb.cmrMarketRepository import MongoCrmMarketRepository
 
 from application.record.cmrCalendarUseCase import CmrCalendarUseCase
 from application.robots.dniPlaywrightUseCase import DniUseCase
 from application.robots.geminiUSeCase import GeminiUseCase
+from application.market.marketUserCase import MarketUseCase
 from infrastructure.persistence.ai.gemini.connection import GeminiConnexion
 
 from infrastructure.persistence.mongodb.cmrRecordRepository import MongoCmrRecordRepository
@@ -138,5 +141,8 @@ async def getIaResponseMercado():
     geminiRepo  =   GeminiRepository(mongoClient) 
     return GeminiUseCase(GeminiRepositoryElement(geminiRepo,gemini))
     
-    
+async def setMarketSave():
+    mongoClient         =   MongoClientManager.getCliente()
+    MongoGeminiRepo     =   MongoCrmMarketRepository(mongoClient)
+    return MarketUseCase(MarketInfra(MongoGeminiRepo))
     

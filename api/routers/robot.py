@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, Depends
 from fastapi.responses  import JSONResponse
-from api.dependencies import getCurrentUser, getDni, getIaResponse, getIaResponseMercado
+from api.dependencies import getCurrentUser, getDni, getIaResponse, getIaResponseMercado, setMarketSave
 from infrastructure.workers.tasks.ocrTask import process_ocr
 from celery.result import AsyncResult
 from infrastructure.workers.celeryApp import celery_app
@@ -65,17 +65,19 @@ async def getResponseIaMercado(
 @routerRobot.post("/robot/ocrMercadoSave")
 async def setMarketSave(
         data: MercadoInputSchema,
-        name = Depends(getCurrentUser) 
+        name = Depends(getCurrentUser) ,
+        usecase = Depends(setMarketSave)
         ):
     
-    domain_obj  = toDomainMarket(data)
-    #result      = domain_obj #await useCase.procesar_json(domain_obj))
+    domain_obj  =   toDomainMarket(data)
+    domain_obj  =   jsonable_encoder(domain_obj)
+    result      =   await usecase.setMarketSave(domain_obj)
     
     return JSONResponse(
         status_code=200,
         content={
             "status": 200,
-            "data": jsonable_encoder(domain_obj) 
+            "data": result
         }
     )
     
