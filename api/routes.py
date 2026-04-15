@@ -8,5 +8,5 @@ async def loginUser(
             form: OAuth2PasswordRequestForm = Depends(), 
             usecase = Depends(getLoginUseCase)
             ):
-    token   =   await usecase.execute(form.username, form.password)
-    return { "accessToken": token }
+    token, idUser   =   await usecase.execute(form.username, form.password)    
+    return { "accessToken": token , "idUser": idUser}
