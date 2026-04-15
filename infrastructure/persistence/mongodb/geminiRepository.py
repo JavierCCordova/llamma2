@@ -11,3 +11,4 @@ class GeminiRepository():
         res         =   await collection.find_one({'client':type})  
         response    =   res.get('prompt','') if res else ''
         return response
+        

@@ -5,4 +5,5 @@ class AIProviderProtocol(Protocol):
     
     async def getDataFile(self, file: bytes, *args) -> dict:
         ...
-    
+    async def getDataImgMercado(self, file: bytes) -> dict:
+        ...

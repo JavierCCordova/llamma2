@@ -15,3 +15,7 @@ class GeminiRepositoryElement(AIProviderProtocol):
         response    =   await self.gemini.getExtractDocument(file,prompt,'application/pdf',*args)        
         return response
         
+    async def getDataImgMercado(self, file:bytes)-> dict:
+        prompt      =   await self.geminiRepository.getPrompt('mercado')
+        response    =   await self.gemini.getExtractDocument(file,prompt,'')        
+        return response

@@ -1,11 +1,15 @@
 from fastapi import APIRouter, UploadFile, File, Form, Depends
 from fastapi.responses  import JSONResponse
-from api.dependencies import getCurrentUser, getDni, getIaResponse
+from api.dependencies import getCurrentUser, getDni, getIaResponse, getIaResponseMercado, setMarketSave
 from infrastructure.workers.tasks.ocrTask import process_ocr
 from celery.result import AsyncResult
 from infrastructure.workers.celeryApp import celery_app
 from infrastructure.workers.tasks.ocrTask import test_task
+
+from infrastructure.api.schemas import MercadoInputSchema
+from infrastructure.mappers.market_mapper import toDomainMarket
 import json
+from fastapi.encoders import jsonable_encoder
 
 routerRobot = APIRouter(prefix='/Robot', tags=['ROBOT'])
 
@@ -46,6 +50,37 @@ async def getResponseIa(
     response['data']    =   await useCase.getDataFile(fileBytes, *feature)
     return JSONResponse(status_code=200, content=response)
 
+@routerRobot.post("/robot/ocrMercado")
+async def getResponseIaMercado(
+    file    :   UploadFile | None = File(None),
+    name    =   Depends(getCurrentUser),
+    useCase =   Depends(getIaResponseMercado)
+):
+    fileBytes           =   await file.read()   
+    response            =   {}
+    response['status']  =   200  
+    response['data']    =   await useCase.getDataImgMercado(fileBytes)
+    return JSONResponse(status_code=200, content=response)
+    
+@routerRobot.post("/robot/ocrMercadoSave")
+async def setMarketSave(
+        data: MercadoInputSchema,
+        name = Depends(getCurrentUser) ,
+        usecase = Depends(setMarketSave)
+        ):
+    
+    domain_obj  =   toDomainMarket(data)
+    domain_obj  =   jsonable_encoder(domain_obj)
+    result      =   await usecase.setMarketSave(domain_obj)
+    
+    return JSONResponse(
+        status_code=200,
+        content={
+            "status": 200,
+            "data": result
+        }
+    )
+    
 
 @routerRobot.post("/robot/ocrGeminiCelery")
 async def getResponseIaCelery(

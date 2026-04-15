@@ -17,4 +17,4 @@ class LoginUseCase:
         if not user or not self.hasher.verify(password,user.hashPassword):
             raise Exception("Credenciales invalidas")
         
-        return self.tokenService.createAccessToken({'sub': user.userName})
+        return self.tokenService.createAccessToken({'sub': user.userName}), user.id

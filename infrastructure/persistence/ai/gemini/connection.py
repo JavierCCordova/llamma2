@@ -2,6 +2,7 @@ from core.config import settings
 import google.generativeai as genai
 import json
 import re
+import magic
 
 class GeminiConnexion:
     
@@ -44,7 +45,16 @@ class GeminiConnexion:
             return jsonReps
 
     async def getExtractDocument(self, file: bytes ,prompt:str, mimeType: str, *args)->dict:
-        promptFo    =   await self._formatPrompt(*args)
+        promptFo        =   ''
+        detectedMime    =   magic.from_buffer(file, mime=True)
+        
+        if "png" in detectedMime:
+            mimeType = "image/png"
+        elif "jpeg" in detectedMime or "jpg" in detectedMime:
+            mimeType = "image/jpeg"
+        
+        if args:
+            promptFo    =   await self._formatPrompt(*args)
         promptFi    =   f"{prompt} \n {promptFo}"
         filePart    =   {
             "mime_type": mimeType,
