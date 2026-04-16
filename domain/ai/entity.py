@@ -13,7 +13,8 @@ class Item:
 @dataclass
 class Totales:
     conteo_final: int
-    monto_total_validado: float
+    total_validado: float
+    total_original_ocr: float
 
 @dataclass
 class Mercado:
