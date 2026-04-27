@@ -7,7 +7,7 @@ from infrastructure.workers.celeryApp import celery_app
 from infrastructure.workers.tasks.ocrTask import test_task
 
 from infrastructure.api.schemas import MercadoInputSchema
-from infrastructure.mappers.market_mapper import toDomainMarket
+from infrastructure.mappers.market_mapper import toDomainMarket, mercadoToDict
 import json
 from fastapi.encoders import jsonable_encoder
 
@@ -70,7 +70,8 @@ async def setMarketSave(
         ):
     
     domain_obj  =   toDomainMarket(data)
-    domain_obj  =   jsonable_encoder(domain_obj)
+    #domain_obj  =   jsonable_encoder(domain_obj)
+    domain_obj  =   mercadoToDict(domain_obj)
     result      =   await usecase.setMarketSave(domain_obj)
     
     return JSONResponse(

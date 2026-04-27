@@ -12,7 +12,8 @@ class ItemSchema(BaseModel):
 
 class TotalesSchema(BaseModel):
     conteo_final: int
-    monto_total_validado: float
+    total_validado: float
+    total_original_ocr: float
 
 class MercadoInputSchema(BaseModel):
     usuario_id: str
