@@ -4,6 +4,7 @@ from api.routers.ocr    import routerTesseract
 from api.routers.dataExcel import routerDataExcel
 from api.routers.crm import routerCmr
 from api.routers.robot import routerRobot
+from api.routers.market import routerMarket
 ## Exception
 from api.exceptionHandlers import domainErrorHandler
 from domain.common.exceptions import DomainError
@@ -16,6 +17,7 @@ app.include_router(router = routerTesseract)
 app.include_router(router = routerDataExcel)
 app.include_router(router = routerCmr)
 app.include_router(router = routerRobot)
+app.include_router(router = routerMarket)
 
 app.add_exception_handler(DomainError,domainErrorHandler)
 app.add_middleware(
